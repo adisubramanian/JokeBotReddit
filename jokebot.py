@@ -50,8 +50,12 @@ def runBot():
 				go = True
 			if go:
 				print("ayyy\n")
-				time.sleep(1 + random.randint(1, 2))
-				comment = sub.reply(info[3][i])
+				time.sleep(100 + random.randint(1, 250))#It'd be weird if we posted at exactly the same time each post, right?
+				try:
+					comment = sub.reply(info[3][i])
+				except:
+					time.sleep(300)
+					comment = sub.reply(info[3][i])
 				f.write(sub.url)
 				f.write("\n \n")
 				try:
@@ -91,8 +95,8 @@ def getTopN(subreddit, n):
 	TitleAndContents = []
 	Comments = []
 	i = 0
-	for submission in subreddit.top('all', limit = n):
-		sub = praw.models.Submission(bot, id = submission)
+	for sub in subreddit.top('all', limit = n):
+		#sub = praw.models.Submission(bot, id = submission)
 		postTitle = sub.title
 		postContent = sub.selftext
 		if "edit: " in postContent:
