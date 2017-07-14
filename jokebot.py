@@ -31,7 +31,7 @@ def getLoginInfo():
 
 def runBot():
 	f = open("commentsWritten.txt", "w")
-	info = getTopN("jokes", 1000)
+	info = getTopN("jokes", 5000)
 	bot = info[4]
 	subreddit = bot.subreddit("jokes")
 	print("got data")
@@ -39,13 +39,17 @@ def runBot():
 
 	for sub in subreddit.stream.submissions():
 		postTitle = sub.title
-		print(postTitle)
+		try:
+			print(postTitle)
+		except:
+			pass
 		postContent = sub.selftext
 		combined = postTitle + " " + postContent
 		for i in range(len(info[0])):
 			go = False
 			if levenshtein(postTitle, info[0][i]) < ((len(postTitle)/20) + 1):
-				go = True
+				if levenshtein(postContent, info[1][i]) > ((len(postTitle)/20) + 1):
+					go = True
 			elif levenshtein(combined, info[2][i]) < ((len(combined)/20) + 1):
 				go = True
 			if go:
@@ -55,7 +59,10 @@ def runBot():
 					comment = sub.reply(info[3][i])
 				except:
 					time.sleep(300)
-					comment = sub.reply(info[3][i])
+					try:
+						comment = sub.reply(info[3][i])
+					except:
+						pass
 				f.write(sub.url)
 				f.write("\n \n")
 				try:
